@@ -4,11 +4,22 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "./theme/index.jsx";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/index.jsx";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ChakraProvider>
-  </StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </QueryClientProvider>
+  </StrictMode>,
 );
