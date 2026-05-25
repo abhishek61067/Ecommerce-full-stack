@@ -42,8 +42,20 @@ import {
 } from "lucide-react";
 
 const CartPage = () => {
-  const { data, isLoading, isError, error } = useGetProductList();
+  // pagination state
+  const [page, setPage] = React.useState(1);
 
+  const [search, setSearch] = React.useState("");
+  const [sortBy, setSortBy] = React.useState("price");
+  const [order, setOrder] = React.useState("asc");
+  const [limit, setLimit] = React.useState(200);
+  const { data, isLoading, error, isError } = useGetProductList(
+    search,
+    sortBy,
+    order,
+    limit,
+    page,
+  );
   const cart = useCartStore((state) => state.cart); // [{id, quantity}]
   const removeFromCart = useCartStore((state) => state.removeFromCart);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
