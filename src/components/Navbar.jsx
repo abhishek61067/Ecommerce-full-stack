@@ -12,7 +12,12 @@ import {
 import logo from "/logo/ecommerce-logo.svg";
 import { Moon, Router, ShoppingCart, Sun } from "lucide-react";
 import { Link as RouterLink } from "react-router-dom";
+import { useCartStore } from "../store/cartStore";
 export const Navbar = () => {
+  // get the state for cart store
+  const cart = useCartStore((state) => state.cart);
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Box
@@ -60,18 +65,20 @@ export const Navbar = () => {
             icon={<ShoppingCart size={20} />}
             as={RouterLink}
           />
-          <Badge
-            position={"absolute"}
-            top={-1}
-            right={-1}
-            bg={"brand.300"}
-            color={"white"}
-            rounded={"full"}
-            fontSize={"0.7rem"}
-            px={2}
-          >
-            2
-          </Badge>
+          {totalItems > 0 && (
+            <Badge
+              position={"absolute"}
+              top={-1}
+              right={-1}
+              bg={"brand.300"}
+              color={"white"}
+              rounded={"full"}
+              fontSize={"0.7rem"}
+              px={2}
+            >
+              {totalItems}
+            </Badge>
+          )}
         </Box>
         {/* dark/light mode toggle */}
         <IconButton

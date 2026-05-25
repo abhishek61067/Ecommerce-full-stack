@@ -17,3 +17,13 @@ export const useGetProductList = (
     },
   });
 };
+
+export const useGetProductDetail = (id) => {
+  return useQuery({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      const response = await AxiosInstance.get(`/products/${id}`);
+      return response.data;
+    },
+  });
+}
