@@ -113,28 +113,28 @@ const CartPage = () => {
     if (qty > 1) updateQuantity(id, qty - 1);
   };
 
-  // const handleCheckout = async () => {
-  //   if (!address.name || !address.street) {
-  //     alert("Please fill in your name and street address!");
-  //     return;
-  //   }
+  const handleCheckout = async () => {
+    if (!address.name || !address.street) {
+      alert("Please fill in your name and street address!");
+      return;
+    }
 
-  //   try {
-  //     const res = await axios.post(
-  //       "http://localhost:5000/create-checkout-session",
-  //       {
-  //         cartItems,
-  //         deliveryAddress: address, // send only name and street for now
-  //       },
-  //     );
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/create-checkout-session",
+        {
+          cartItems,
+          deliveryAddress: address, // send only name and street for now
+        },
+      );
 
-  //     const { url } = res.data;
-  //     window.location.href = url;
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("Checkout failed. Please try again.");
-  //   }
-  // };
+      const { url } = res.data;
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+      alert("Checkout failed. Please try again.");
+    }
+  };
 
   return (
     <Box p={8} bg={bgColor}>
@@ -235,6 +235,89 @@ const CartPage = () => {
                 </Tbody>
               </Table>
             </TableContainer>
+          </Box>
+
+          {/* right: order summary */}
+          <Box
+            flex="1"
+            p={4}
+            bg={useColorModeValue("gray.50", dark)}
+            borderRadius="md"
+            position="sticky"
+            top="20px"
+            h="fit-content"
+            rounded={"xl"}
+            shadow={"xl"}
+          >
+            <Text fontSize="xl" fontWeight="bold" mb={4} color={"text"}>
+              Order Summary
+            </Text>
+            <Text mb={4} fontSize="xs" color={total > 50 ? green : "gray.500"}>
+              Disclaimer: No shipping charge will apply for orders above $50
+            </Text>
+            <VStack spacing={2} align="stretch">
+              <HStack justify="space-between">
+                <Text color={textColor}>Items ({cartItems.length})</Text>
+                <Text color={textColor}>${subtotal.toFixed(2)}</Text>
+              </HStack>
+              <HStack justify="space-between">
+                <Text color={textColor}>Shipping</Text>
+                <Text color={total > 50 ? green : "gray.500"}>
+                  {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                </Text>
+              </HStack>
+
+              <HStack justify="space-between">
+                <Text color={textColor}>Discount (10%)</Text>
+                <Text color={"primary"}>-${discount.toFixed(2)}</Text>
+              </HStack>
+              <Divider />
+              <HStack justify="space-between">
+                <Text fontWeight="bold" color={textColor}>
+                  Total
+                </Text>
+                <Text fontWeight="bold" color={textColor}>
+                  ${total.toFixed(2)}
+                </Text>
+              </HStack>
+            </VStack>
+
+            {/* Delivery Address Form: simplified */}
+            <Box mt={4}>
+              <Text fontSize="md" fontWeight="bold" mb={4} color={"text"}>
+                Delivery Address
+              </Text>
+              <VStack spacing={2} align="stretch">
+                <Box>
+                  <FormLabel color={textColor}>Full Name *</FormLabel>
+                  <Input
+                    value={address.name}
+                    placeholder="John Doe"
+                    onChange={(e) =>
+                      setAddress({ ...address, name: e.target.value })
+                    }
+                  />
+                </Box>
+                <Box>
+                  <FormLabel color={textColor}>Street Address *</FormLabel>
+                  <Input
+                    value={address.street}
+                    placeholder="123 Main St"
+                    onChange={(e) =>
+                      setAddress({ ...address, street: e.target.value })
+                    }
+                  />
+                </Box>
+              </VStack>
+            </Box>
+            <Button
+              mt={4}
+              colorScheme="blue"
+              width="100%"
+              onClick={handleCheckout}
+            >
+              Proceed to Checkout
+            </Button>
           </Box>
         </Stack>
       )}

@@ -6,18 +6,20 @@ export const useCartStore = create(
     (set) => ({
       cart: [], // array of {id, quantity}
 
-      addToCart: (id) =>
+      addToCart: (id, quantity = 1) =>
         set((state) => {
+          const qty = Number(quantity) || 1;
           const exists = state.cart.find((item) => item.id === id);
           if (exists) {
-            // increment quantity if already in cart
             return {
               cart: state.cart.map((item) =>
-                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+                item.id === id
+                  ? { ...item, quantity: item.quantity + qty }
+                  : item
               ),
             };
           }
-          return { cart: [...state.cart, { id, quantity: 1 }] };
+          return { cart: [...state.cart, { id, quantity: qty }] };
         }),
 
       removeFromCart: (id) =>
